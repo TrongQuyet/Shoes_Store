@@ -1,0 +1,15 @@
+.cascading-right {
+    margin-right: -50px;
+  }
+  .rounded-4 {
+    height: 100vh;
+}
+.my-5 {
+   margin-top: 0rem !important; 
+   margin-bottom: 0rem !important; 
+}
+  @media (max-width: 900px) {
+    .cascading-right {
+      margin-right: 0;
+    }
+  }
