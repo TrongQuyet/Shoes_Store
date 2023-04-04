@@ -17,3 +17,5 @@ use App\Http\Controllers\UserController;
 Route::post('/login',[UserController::class,'login'])->name('login');
 Route::post('/register',[UserController::class,'register'])->name('register');
 Route::get('/allshoes',[UserController::class,'allshoes'])->name('allshoes');
+Route::post('/search',[UserController::class,'search'])->name('search');
+Route::post('/carts',[UserController::class,'carts'])->name('carts');

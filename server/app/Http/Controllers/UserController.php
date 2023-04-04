@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use App\Models\Shoe;  
+use App\Models\Shoe;
+use App\Models\Cart;   
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -22,7 +23,8 @@ class UserController extends Controller
                 // Trả về thông báo lỗi
                 return new Response('tài khoản hoặc mật khẩu sai',404);
             }
-            return new Response('chào mừng '.''.$user->firstname,200);;
+            session()->put('user_id', $user->id);
+            return new Response($user->firstname,200);;
         }
     }
     public function register(Request $request){
@@ -52,9 +54,62 @@ class UserController extends Controller
         }
     }
     public function allshoes() {
+        // Lấy thông tin user_id từ session
+        $user_id = session()->get('user_id');
         $allshoes = Shoe::all();
-        return new Response($allshoes,200);
+        return response()->json([
+            'user_id' => $user_id,
+            'shoes' => $allshoes,
+        ]);
         
     }
-    
+    public function search(Request $request){
+        $query = $request->input('query');
+        $shoes = Shoe::where('name', 'like', "%$query%")
+                             ->orWhere('brand', 'like', "%$query%")
+                             ->get();
+        // if ($shoes->count() === 0) {
+        //  return response()->json(['message' => 'Không có sản phẩm'], 404);
+        //         }
+        return response()->json($shoes,200);
+
+    }
+    public function add(Request $request)
+    {
+        $user = auth()->user();
+
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('shoe_id', $request->shoe_id)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity;
+            $cartItem->price = $request->price;
+            $cartItem->save();
+        } else {
+            $cartItem = new Cart;
+            $cartItem->user_id = $user->id;
+            $cartItem->shoe_id = $request->shoe_id;
+            $cartItem->quantity = $request->quantity;
+            $cartItem->price = $request->price;
+            $cartItem->save();
+        }
+
+        return redirect()->route('cart.index');
+    }
+
+    public function remove($shoe_id)
+    {
+        $user = auth()->user();
+
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('shoe_id', $shoe_id)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->delete();
+        }
+
+        return redirect()->route('cart.index');
+    }
 }

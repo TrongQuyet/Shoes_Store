@@ -60,15 +60,15 @@ const Footer = () => {
             </form>
           </section>
   
-          <section className='mb-4'>
+          {/* <section className='mb-4'>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat
               voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam
               sequi voluptate quas.
             </p>
-          </section>
+          </section> */}
   
-          <section className=''>
+          {/* <section className=''>
             <MDBRow>
               <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
                 <h5 className='text-uppercase'>Links</h5>
@@ -178,16 +178,16 @@ const Footer = () => {
                 </ul>
               </MDBCol>
             </MDBRow>
-          </section>
+          </section> */}
         </MDBContainer>
   
-        <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+        {/* <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
           © 2020 Copyright:
           <a className='text-white' href='https://mdbootstrap.com/'>
             MDBootstrap.com
           </a>
-        </div>
-      </MDBFooter>
+        </div> */}
+        </MDBFooter>
     );
 };
 

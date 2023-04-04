@@ -6,11 +6,21 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useNavigate } from 'react-router-dom';
-import {MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
-const Login = () => {
+import { useCookies } from 'react-cookie';
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBIcon,
+  MDBInput
+}
+from 'mdb-react-ui-kit';
+const Login = (props) => {
     let navigate = useNavigate();
     const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
+
   
     const handleUsernameChange = (event) => {
       setemail(event.target.value);
@@ -29,8 +39,9 @@ const Login = () => {
         password: `${password}`
       })
       .then(async response => {
-        // console.log(response.data);
-        await toast.success(response.data);
+        // console.log(response.data)
+        // await toast.success(response.data);
+        await localStorage.setItem('user', JSON.stringify(response.data));
         navigate("/home");
       })
       .catch(error => {
@@ -41,12 +52,49 @@ const Login = () => {
     return (
  
         <>
-    <MDBContainer fluid className="p-3 my-5 h-custom" >
+<MDBContainer >
+      <MDBRow>
+
+        <MDBCol sm='6'>
+
+          <div className='d-flex flex-row ps-5 pt-5'>
+            <MDBIcon fas icon="crow fa-3x me-3" style={{ color: '#709085' }}/>
+            <span className="h1 fw-bold mb-0">King Shoes</span>
+          </div>
+
+          <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
+
+            <h3 className="fw-normal mb-3 ps-5 pb-3" style={{letterSpacing: '1px'}}>Log in</h3>
+
+            <MDBInput wrapperClass='mb-4 mx-5 w-100' name="email"
+              value={email}
+              onChange={handleUsernameChange}label='Email address' id='formControlLg' type='email' size="lg"/>
+            <MDBInput wrapperClass='mb-4 mx-5 w-100' name="password"
+              value={password}
+              onChange={handlePasswordChange} label='Password' id='formControlLg' type='password' size="lg"/>
+
+            <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg' onClick={handleSubmit}>Login</MDBBtn>
+            <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="#!">Forgot password?</a></p>
+            <p className='ms-5'>Don't have an account? <a href="http://localhost:3000/register" className="link-info">Register here</a></p>
+
+          </div>
+
+        </MDBCol>
+
+        <MDBCol sm='6' className='d-none d-sm-block px-0'>
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"
+            alt="Login image" className="w-100" style={{padding: '10px',height: '100vh',objectFit: 'cover', objectPosition: 'left'}} />
+        </MDBCol>
+
+      </MDBRow>
+
+    </MDBContainer>
+    {/* <MDBContainer fluid className="p-3 my-5 h-custom" >
 
 <MDBRow>
 
   <MDBCol col='10' md='6'>
-    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
+    <image src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
   </MDBCol>
 
   <MDBCol col='4' md='6'>
@@ -93,7 +141,7 @@ const Login = () => {
   </MDBCol>
 
 </MDBRow>
-    </MDBContainer>
+    </MDBContainer> */}
     <ToastContainer />
         </>
     );
