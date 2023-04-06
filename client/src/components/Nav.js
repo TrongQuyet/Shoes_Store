@@ -1,4 +1,4 @@
-import {React,useState} from 'react';
+import {React,useState,useEffect} from 'react';
 import axios from 'axios';
 import {useNavigate } from 'react-router-dom';
 import {
@@ -22,10 +22,27 @@ import {
 } from 'mdb-react-ui-kit';
 const Nav = (props) => {
   let navigate = useNavigate();
+  const user_id = JSON.parse(localStorage.getItem('user_id'));
   const [basicModal, setBasicModal] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const firstname = JSON.parse(localStorage.getItem('firstname'));
   const [showBasic, setShowBasic] = useState(false);
   const [query,setquery] = useState('');
+  const [cartnotification,setcartnotification] = useState('')
+  useEffect(()=>{
+    Cartnotification()
+  },[])
+  let Cartnotification=async()=>{
+    axios.post('http://localhost:8000/api/cartnotification', {
+      user_id: user_id
+    })
+    .then(response => {
+      setcartnotification(response.data)
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error('Lỗi:', error);
+    });
+  }
   let handlesearch= async(event)=>{
     event.preventDefault();
     console.log(query);
@@ -33,7 +50,7 @@ const Nav = (props) => {
   
   }
   let handlelogout=()=>{
-    localStorage.removeItem('user');
+    localStorage.removeItem('firstname');
     navigate('/home')
   }
   const toggleShow = () => setBasicModal(!basicModal);
@@ -86,11 +103,12 @@ const Nav = (props) => {
           </form>
           </MDBNavbarNav>
           <span className='d-inline-block me-3'>
-          <MDBBadge className='ms-2' color='danger'>0</MDBBadge>
-            <MDBIcon fas icon='shopping-cart' className='fa-1x' />
+          <MDBBadge className='ms-2' color='danger'>{cartnotification}</MDBBadge>
+          <a  href="http://localhost:3000/cart"><MDBIcon fas icon='shopping-cart' className='fa-1x' /></a>
+            
           </span>
           <span className='d-inline-block'>
-          {!user ?<a href="http://localhost:3000/login">Đăng nhập</a>:<><span>{user}</span><button onClick={toggleShow}>log out</button></>}
+          {!firstname ?<a href="http://localhost:3000/login">Đăng nhập</a>:<><span>{firstname}</span><button onClick={toggleShow}>log out</button></>}
           {/* <MDBIcon fas icon='user' className='fa-2x' /> */}
           </span>
           <MDBModal show={basicModal} setShow={setBasicModal} tabIndex='-1'>

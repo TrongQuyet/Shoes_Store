@@ -39,9 +39,10 @@ const Login = (props) => {
         password: `${password}`
       })
       .then(async response => {
-        // console.log(response.data)
+        console.log(response.data.user_id)
         // await toast.success(response.data);
-        await localStorage.setItem('user', JSON.stringify(response.data));
+        await localStorage.setItem('firstname', JSON.stringify(response.data.firstname));
+        await localStorage.setItem('user_id', JSON.stringify(response.data.user_id));
         navigate("/home");
       })
       .catch(error => {

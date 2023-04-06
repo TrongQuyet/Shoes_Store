@@ -18,4 +18,5 @@ Route::post('/login',[UserController::class,'login'])->name('login');
 Route::post('/register',[UserController::class,'register'])->name('register');
 Route::get('/allshoes',[UserController::class,'allshoes'])->name('allshoes');
 Route::post('/search',[UserController::class,'search'])->name('search');
-Route::post('/carts',[UserController::class,'carts'])->name('carts');
+Route::post('/addcart',[UserController::class,'addcart'])->name('addcart');
+Route::post('/cartnotification',[UserController::class,'cartnotification'])->name('cartnotification');

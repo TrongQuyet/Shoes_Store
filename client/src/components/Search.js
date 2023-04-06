@@ -46,9 +46,15 @@ const Search = (props) => {
       <MDBCardBody>
         <MDBCardTitle>{shoe.name}</MDBCardTitle>
         <MDBCardText>
-        {shoe.brand},{shoe.color},{shoe.price}
+        thương hiệu : {shoe.brand}
         </MDBCardText>
-        <MDBBtn href='#'>Buy now</MDBBtn>
+        <MDBCardText>
+        màu sắc : {shoe.color}
+        </MDBCardText>
+        <MDBCardText>
+        giá : {shoe.price} $
+        </MDBCardText>
+        <MDBBtn href='#'>Thêm vào giỏ hàng</MDBBtn>
       </MDBCardBody>
     </MDBCard>
         ))}</>:<><h1>không có sản phẩm cần tìm</h1></>}

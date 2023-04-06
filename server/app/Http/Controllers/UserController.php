@@ -24,7 +24,7 @@ class UserController extends Controller
                 return new Response('tài khoản hoặc mật khẩu sai',404);
             }
             session()->put('user_id', $user->id);
-            return new Response($user->firstname,200);;
+            return new Response(json_encode(['user_id' => $user->id, 'firstname' => $user->firstname]), 200);
         }
     }
     public function register(Request $request){
@@ -74,42 +74,46 @@ class UserController extends Controller
         return response()->json($shoes,200);
 
     }
-    public function add(Request $request)
+    public function addcart(Request $request)
     {
-        $user = auth()->user();
-
-        $cartItem = Cart::where('user_id', $user->id)
-            ->where('shoe_id', $request->shoe_id)
-            ->first();
-
-        if ($cartItem) {
-            $cartItem->quantity += $request->quantity;
-            $cartItem->price = $request->price;
-            $cartItem->save();
+    
+        $shoe = Shoe::find($request->input('shoe_id'));
+        $user_id = $request->input('user_id');
+        $price = $shoe->price;
+        $cart = Cart::where('user_id', $user_id)->where('shoe_id', $shoe->id)->first();
+        if ($cart) {
+            $cart->quantity += $request->input('quantity');
+            $cart->price += $price * $request->input('quantity');
+            $cart->save();
         } else {
-            $cartItem = new Cart;
-            $cartItem->user_id = $user->id;
-            $cartItem->shoe_id = $request->shoe_id;
-            $cartItem->quantity = $request->quantity;
-            $cartItem->price = $request->price;
-            $cartItem->save();
+            $cart = new Cart();
+            $cart->user_id = $user_id;
+            $cart->shoe_id = $shoe->id;
+            $cart->quantity = $request->input('quantity');
+            $cart->price = $price * $request->input('quantity');
+            $cart->save();
         }
-
-        return redirect()->route('cart.index');
+    
+        return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng'], 200);
+    }
+    public function cartnotification(Request $request){
+        $user_id = $request->input('user_id');
+        $count = Cart::where('user_id', $user_id)->sum('quantity');
+        return new Response( $count, 200);
     }
 
-    public function remove($shoe_id)
-    {
-        $user = auth()->user();
+    // public function remove($shoe_id)
+    // {
+    //     $user = auth()->user();
 
-        $cartItem = Cart::where('user_id', $user->id)
-            ->where('shoe_id', $shoe_id)
-            ->first();
+    //     $cartItem = Cart::where('user_id', $user->id)
+    //         ->where('shoe_id', $shoe_id)
+    //         ->first();
 
-        if ($cartItem) {
-            $cartItem->delete();
-        }
+    //     if ($cartItem) {
+    //         $cartItem->delete();
+    //     }
 
-        return redirect()->route('cart.index');
-    }
+    //     return redirect()->route('cart.index');
+    // }
 }

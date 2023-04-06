@@ -1,5 +1,6 @@
 import {React,useState,useEffect} from 'react';
 import '../public/scss/Shoes.scss'
+import { ToastContainer, toast } from 'react-toastify';
 import {
     MDBCard,
     MDBCardBody,
@@ -11,8 +12,8 @@ import {
   } from 'mdb-react-ui-kit'
 import axios from 'axios'
 const Shoes = () => {
+  const user_id = JSON.parse(localStorage.getItem('user_id'));
     const [allshoes, setallShoes] = useState([]);
-
     useEffect(() =>{
         getallshoes()
     },[])
@@ -28,6 +29,23 @@ const Shoes = () => {
       });
 
     }
+    let handleaddshoes=async(shoe)=> {
+
+      axios.post('http://localhost:8000/api/addcart', {
+        user_id: user_id,
+        shoe_id: shoe.id,
+        quantity: 1
+      })
+      .then(response => {
+        console.log('Thêm sản phẩm vào giỏ hàng thành công');
+        toast.success(`thêm thành công ${shoe.name}`);
+      })
+      .catch(error => {
+        console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+      });
+
+    }
+  
     return (
         <>
         {allshoes.map(shoe => (
@@ -46,10 +64,11 @@ const Shoes = () => {
         <MDBCardText>
         giá : {shoe.price} $
         </MDBCardText>
-        <MDBBtn href='#'>Buy now</MDBBtn>
+        <MDBBtn onClick={()=>{handleaddshoes(shoe)}}>Thêm vào giỏ hàng</MDBBtn>
       </MDBCardBody>
     </MDBCard>
         ))}
+        <ToastContainer />
         </>
     );
 };
