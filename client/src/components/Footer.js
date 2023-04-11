@@ -13,29 +13,29 @@ const Footer = () => {
         <MDBFooter className='text-center' color='white' bgColor='dark'>
         <MDBContainer className='p-4'>
           <section className='mb-4'>
-            <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+            <button  color="light"  className='m-1' href='#!' role='button'>
               <MDBIcon fab icon='facebook-f' />
-            </MDBBtn>
+            </button>
   
-            <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+            <button  color="light"  className='m-1' href='#!' role='button'>
               <MDBIcon fab icon='twitter' />
-            </MDBBtn>
+            </button>
   
-            <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+            <button  color="light"  className='m-1' href='#!' role='button'>
               <MDBIcon fab icon='google' />
-            </MDBBtn>
+            </button>
   
-            <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+            <button  color="light"  className='m-1' href='#!' role='button'>
               <MDBIcon fab icon='instagram' />
-            </MDBBtn>
+            </button>
   
-            <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+            <button  color="light"  className='m-1' href='#!' role='button'>
               <MDBIcon fab icon='linkedin-in' />
-            </MDBBtn>
+            </button>
   
-            <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+            <button  color="light"  className='m-1' href='#!' role='button'>
               <MDBIcon fab icon='github' />
-            </MDBBtn>
+            </button>
           </section>
   
           <section className=''>
@@ -52,9 +52,9 @@ const Footer = () => {
                 </MDBCol>
   
                 <MDBCol size="auto">
-                  <MDBBtn outline color='light' type='submit' className='mb-4'>
+                  <button  color='light' type='submit' className='mb-4'>
                     Subscribe
-                  </MDBBtn>
+                  </button>
                 </MDBCol>
               </MDBRow>
             </form>

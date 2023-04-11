@@ -1,6 +1,6 @@
 import {React,useEffect,useState} from 'react';
 import Nav from './Nav';
-import { useLocation } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 import Footer from './Footer';
 import axios from 'axios'
 import {
@@ -13,6 +13,7 @@ import {
     MDBRipple
   } from 'mdb-react-ui-kit'
 const Search = (props) => {
+  const user_id = JSON.parse(localStorage.getItem('user_id'));
   const [shoes, setshoes] = useState([]);
   const urlParams = new URLSearchParams(window.location.search);
   const keyword = urlParams.get("query");
@@ -33,6 +34,23 @@ const Search = (props) => {
   useEffect(() => {
     searchshoes()
   },[])
+  let handleaddshoes=async(shoe)=> {
+
+    axios.post('http://localhost:8000/api/addcart', {
+      user_id: user_id,
+      shoe_id: shoe.id,
+      quantity: 1
+    })
+    .then (response => {
+      console.log('Thêm sản phẩm vào giỏ hàng thành công');
+      toast.success(`thêm thành công ${shoe.name}`);
+      
+    })
+    .catch(error => {
+      console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+    });
+
+  }
     return (
       
         <>
@@ -52,14 +70,15 @@ const Search = (props) => {
         màu sắc : {shoe.color}
         </MDBCardText>
         <MDBCardText>
-        giá : {shoe.price} $
+        giá : {shoe.price}.000 VND
         </MDBCardText>
-        <MDBBtn href='#'>Thêm vào giỏ hàng</MDBBtn>
+        <button onClick={()=>{handleaddshoes(shoe)}}>Thêm vào giỏ hàng</button>
       </MDBCardBody>
     </MDBCard>
         ))}</>:<><h1>không có sản phẩm cần tìm</h1></>}
      
         <Footer/>
+        <ToastContainer />
         </>
     );
 };

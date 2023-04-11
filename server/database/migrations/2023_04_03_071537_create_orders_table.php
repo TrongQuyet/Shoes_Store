@@ -17,6 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('users')->onDelete('cascade');
             $table->decimal('total_price', 10, 2);
+            $table->string('customer_name');
+            $table->string('customer_phone');
+            $table->string('customer_address');
+            $table->string('payment_method');
             $table->timestamps();
         });
     }

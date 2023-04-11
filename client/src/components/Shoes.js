@@ -11,7 +11,7 @@ import {
     MDBRipple
   } from 'mdb-react-ui-kit'
 import axios from 'axios'
-const Shoes = () => {
+const Shoes = (props) => {
   const user_id = JSON.parse(localStorage.getItem('user_id'));
     const [allshoes, setallShoes] = useState([]);
     useEffect(() =>{
@@ -36,9 +36,11 @@ const Shoes = () => {
         shoe_id: shoe.id,
         quantity: 1
       })
-      .then(response => {
+      .then (response => {
         console.log('Thêm sản phẩm vào giỏ hàng thành công');
         toast.success(`thêm thành công ${shoe.name}`);
+        props.setcartnotification(props.cartnotification+1)
+        
       })
       .catch(error => {
         console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
@@ -62,9 +64,10 @@ const Shoes = () => {
         màu sắc : {shoe.color}
         </MDBCardText>
         <MDBCardText>
-        giá : {shoe.price} $
+        giá : {shoe.price}.000 VND
         </MDBCardText>
-        <MDBBtn onClick={()=>{handleaddshoes(shoe)}}>Thêm vào giỏ hàng</MDBBtn>
+        {/* <MDBBtn onClick={()=>{handleaddshoes(shoe)}}>Thêm vào giỏ hàng</MDBBtn> */}
+        <button onClick={()=>{handleaddshoes(shoe)}}>Thêm vào giỏ hàng</button>
       </MDBCardBody>
     </MDBCard>
         ))}

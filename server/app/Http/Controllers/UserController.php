@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Shoe;
-use App\Models\Cart;   
+use App\Models\Cart;
+use App\Models\Orders;
+use App\Models\OrderDetail;       
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use BeyondCode\LaravelWebSockets\Facades\WebSocket;
 
 class UserController extends Controller
 {
@@ -76,9 +79,11 @@ class UserController extends Controller
     }
     public function addcart(Request $request)
     {
-    
         $shoe = Shoe::find($request->input('shoe_id'));
         $user_id = $request->input('user_id');
+        if(!$user_id){
+            return new Response( 'vui lòng đăng nhập trc khi thêm', 404);
+        }
         $price = $shoe->price;
         $cart = Cart::where('user_id', $user_id)->where('shoe_id', $shoe->id)->first();
         if ($cart) {
@@ -101,19 +106,61 @@ class UserController extends Controller
         $count = Cart::where('user_id', $user_id)->sum('quantity');
         return new Response( $count, 200);
     }
+    public function getcart(Request $request){
+        $user_id = $request->input('user_id');
+        $cart = Cart::join('shoes', 'carts.shoe_id', '=', 'shoes.id')
+                ->where('carts.user_id', $user_id)
+                ->select('shoes.id as shoe_id','shoes.name as shoe_name', 'shoes.image as shoe_image', 'carts.quantity', 'carts.price','carts.id')
+                ->get();
+        return new Response(   $cart, 200);
+    }
+    public function removeshoe(Request $request){
+        $item_id = $request->input('item_id');
+        $item = Cart::find($item_id);
+        if ($item) {
+            $item->delete();
+            return new Response("Xóa thành công sản phẩm có ID là $item_id", 200);
+        } else {
+            return new Response("Không tìm thấy sản phẩm với ID là $item_id", 404);
+        }
+    }
+    public function addorder(Request $request){
+        $customer_id = $request->input('customer_id');
+        $total_price = $request->input('total_price');
+        $customer_name	 = $request->input('customer_name');
+        $customer_phone = $request->input('customer_phone');
+        $customer_address = $request->input('customer_address');
+        $payment_method = $request->input('payment_method');
+        $items = $request->input('items');
+        if ( !$customer_phone || !$customer_address || !$payment_method) {
+            return new Response('điền đầy đủ thông tin giao hàng',404);
+        }
+        if ( ! $customer_id) {
+            return new Response('vui lòng đăng nhập',404);
+        }
+         // Tạo một đối tượng Order mới
+            $order = new Orders;
+            $order->customer_id = $customer_id;
+            $order->total_price = $total_price;
+            $order->customer_name = $customer_name;
+            $order->customer_phone = $customer_phone;
+            $order->customer_address = $customer_address;
+            $order->payment_method = $payment_method;
+            $order->save();
+     // Tạo các đối tượng OrderDetail mới
+            foreach ($items as $item) {
+                $orderDetail = new OrderDetail;
+                $orderDetail->order_id = $order->id;
+                $orderDetail->shoe_id = $item['shoe_id'];
+                $orderDetail->quantity = $item['quantity'];
+                $orderDetail->price = $item['price'];
+                $orderDetail->save();
+            }
 
-    // public function remove($shoe_id)
-    // {
-    //     $user = auth()->user();
+    // Trả về đối tượng Order vừa tạo
+    return response()->json(['message' => 'Order successfully created!']);
 
-    //     $cartItem = Cart::where('user_id', $user->id)
-    //         ->where('shoe_id', $shoe_id)
-    //         ->first();
+    }
 
-    //     if ($cartItem) {
-    //         $cartItem->delete();
-    //     }
-
-    //     return redirect()->route('cart.index');
-    // }
+ 
 }

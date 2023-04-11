@@ -1,6 +1,7 @@
 import {React,useState,useEffect} from 'react';
 import axios from 'axios';
 import {useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
 import {
   MDBContainer,
   MDBNavbar,
@@ -27,7 +28,7 @@ const Nav = (props) => {
   const firstname = JSON.parse(localStorage.getItem('firstname'));
   const [showBasic, setShowBasic] = useState(false);
   const [query,setquery] = useState('');
-  const [cartnotification,setcartnotification] = useState('')
+  const [cartnotification,setcartnotification] = useState()
   useEffect(()=>{
     Cartnotification()
   },[])
@@ -51,7 +52,8 @@ const Nav = (props) => {
   }
   let handlelogout=()=>{
     localStorage.removeItem('firstname');
-    navigate('/home')
+    localStorage.removeItem('user_id');
+    props.setcartnotification(0)
   }
   const toggleShow = () => setBasicModal(!basicModal);
     return (
@@ -99,11 +101,12 @@ const Nav = (props) => {
             </MDBNavbarItem> */}
             <form className='d-flex input-group w-auto'>
             <input type='search' className='form-control' placeholder='Tìm gì đó ...' aria-label='Search' value={query} onChange={(e)=>{setquery(e.target.value)}}  />
-            <MDBBtn  className="my-button" color='primary' onClick={handlesearch} >Tìm kiếm</MDBBtn> 
+            {/* <MDBBtn  className="my-button" color='primary' onClick={handlesearch} >Tìm kiếm</MDBBtn> */}
+            <button  className="my-button" color='primary' onClick={handlesearch} >Tìm kiếm</button>  
           </form>
           </MDBNavbarNav>
           <span className='d-inline-block me-3'>
-          <MDBBadge className='ms-2' color='danger'>{cartnotification}</MDBBadge>
+          <MDBBadge className='ms-2' color='danger'>{props.cartnotification}</MDBBadge>
           <a  href="http://localhost:3000/cart"><MDBIcon fas icon='shopping-cart' className='fa-1x' /></a>
             
           </span>
@@ -119,7 +122,6 @@ const Nav = (props) => {
               <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
             </MDBModalHeader>
             <MDBModalBody>Bạn có chắc chắn muốn thoát không?</MDBModalBody>
-
             <MDBModalFooter>
               <MDBBtn color='secondary' onClick={toggleShow}>
                 Không

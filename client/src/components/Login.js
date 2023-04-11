@@ -32,7 +32,6 @@ const Login = (props) => {
   
 
     const handleSubmit = async(event) => {
-      event.preventDefault();
       console.log(`Username: ${email}, Password: ${password}`);
      await axios.post('http://localhost:8000/api/login', {
         email: `${email}`,
@@ -50,6 +49,11 @@ const Login = (props) => {
         toast.error(error.response.data);
       });
     };
+    const handleKeyPress = (event) => {
+      if (event.keyCode === 13) {
+        handleSubmit();
+      }
+    }
     return (
  
         <>
@@ -69,12 +73,13 @@ const Login = (props) => {
 
             <MDBInput wrapperClass='mb-4 mx-5 w-100' name="email"
               value={email}
-              onChange={handleUsernameChange}label='Email address' id='formControlLg' type='email' size="lg"/>
+              onChange={handleUsernameChange}
+              label='Email address' id='formControlLg' type='email' size="lg"/>
             <MDBInput wrapperClass='mb-4 mx-5 w-100' name="password"
               value={password}
-              onChange={handlePasswordChange} label='Password' id='formControlLg' type='password' size="lg"/>
-
-            <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg' onClick={handleSubmit}>Login</MDBBtn>
+              onChange={handlePasswordChange} onKeyDown={(event) => handleKeyPress(event)}
+              label='Password' id='formControlLg' type='password' size="lg"/>
+            <button className="btn_login mb-4 px-5 mx-5 w-100"   color='info' size='lg' onClick={handleSubmit} >Login</button>
             <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="#!">Forgot password?</a></p>
             <p className='ms-5'>Don't have an account? <a href="http://localhost:3000/register" className="link-info">Register here</a></p>
 

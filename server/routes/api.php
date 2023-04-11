@@ -20,3 +20,6 @@ Route::get('/allshoes',[UserController::class,'allshoes'])->name('allshoes');
 Route::post('/search',[UserController::class,'search'])->name('search');
 Route::post('/addcart',[UserController::class,'addcart'])->name('addcart');
 Route::post('/cartnotification',[UserController::class,'cartnotification'])->name('cartnotification');
+Route::post('/getcart',[UserController::class,'getcart'])->name('getcart');
+Route::post('/removeshoe',[UserController::class,'removeshoe'])->name('removeshoe');
+Route::post('/addorder',[UserController::class,'addorder'])->name('addorder');
